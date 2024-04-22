@@ -1,0 +1,40 @@
+services:
+  harmony:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_SCHEMA=harmony_ap
+      - DB_PASSWORD=efti
+      - ADMIN_PASSWORD=efti
+      # Simplify plugin password requirements for development setup
+      - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
+      # Password for pmode plugin
+      - PMODE_ADMIN_PASSWORD=efti_pmode
+      - EFTI_PMODE_PATH=/var/opt/efti/pmode.xml
+      - USE_DYNAMIC_DISCOVERY=false
+      - PARTY_NAME=party_a
+      - DOMIBUS_AUTH_UNSECURELOGINALLOWED=true
+    restart: always
+    ports:
+      - "127.0.0.1:10443:8443"
+    volumes:
+      - type: bind
+        source: ./dev/dev_pmode.xml
+        target: /var/opt/efti/pmode.xml
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=efti
+      - MYSQL_DATABASE=harmony_ap
+      - MYSQL_USER=harmony_ap
+      - MYSQL_PASSWORD=efti
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_bin"
+    restart: on-failure
+    mem_limit: 512m
