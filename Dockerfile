@@ -6,8 +6,8 @@ RUN apt-get -qqy update \
  && apt-get autoremove \
  && apt-get clean
 
-COPY files/bin/* /opt/harmony-ap/bin/
+COPY files/bin/* /opt/efti/bin/
 
 USER harmony-ap
 
-ENTRYPOINT ["/opt/harmony-ap/bin/aggregate_entrypoint.sh"]
+ENTRYPOINT ["/opt/efti/bin/aggregate_entrypoint.sh"]
