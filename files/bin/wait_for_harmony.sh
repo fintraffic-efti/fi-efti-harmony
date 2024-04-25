@@ -5,7 +5,7 @@ set -e
 cmd="$@"
 
 sleepcount=0
-until curl --silent --insecure https://127.0.0.1:8443; do
+until curl --silent --output /dev/null --insecure https://127.0.0.1:8443; do
   # sleep max 120 iterations
   if (( "$sleepcount" < "120" )); then
     >&2 echo "Harmony is unavailable - sleeping"
