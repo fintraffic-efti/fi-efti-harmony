@@ -15,7 +15,7 @@ services:
       # Simplify plugin password requirements for development setup
       - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
       # Password for pmode plugin
-      - PMODE_ADMIN_PASSWORD=efti_pmode
+      - EFTI_PMODE_ADMIN_PASSWORD=efti_pmode
       - USE_DYNAMIC_DISCOVERY=false
       - PARTY_NAME=party_a
       - SECURITY_KEYSTORE_PASSWORD=efti1234
