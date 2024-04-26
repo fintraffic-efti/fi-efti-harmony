@@ -4,8 +4,9 @@ services:
       context: ./
       dockerfile: Dockerfile
     env_file:
-      # Generate env file with: echo "EFTI_PMODE_BASE64=""$(cat dev/dev_pmode.xml | base64 --wrap 0)""" > .pmode.env
+      # ./start.sh generates env files
       - .pmode.env
+      - .stores.env
     environment:
       - DB_HOST=db
       - DB_SCHEMA=harmony_ap
@@ -17,6 +18,10 @@ services:
       - PMODE_ADMIN_PASSWORD=efti_pmode
       - USE_DYNAMIC_DISCOVERY=false
       - PARTY_NAME=party_a
+      - SECURITY_KEYSTORE_PASSWORD=efti1234
+      - SECURITY_TRUSTSTORE_PASSWORD=efti1234
+      - TLS_KEYSTORE_PASSWORD=efti1234
+      - TLS_TRUSTSTORE_PASSWORD=efti1234
       - DOMIBUS_AUTH_UNSECURELOGINALLOWED=true
     restart: always
     ports:
