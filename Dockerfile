@@ -7,6 +7,7 @@ RUN apt-get -qqy update \
  && apt-get clean
 
 COPY files/bin/* /opt/efti/bin/
+RUN chmod -R a+rX /opt/efti/bin
 
 USER harmony-ap
 
