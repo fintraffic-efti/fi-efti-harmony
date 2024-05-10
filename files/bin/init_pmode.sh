@@ -28,7 +28,7 @@ curl -X POST \
   -H 'Content-Type: application/json' \
   -d '{"username" : "'"$ADMIN_USER"'", "password" : "'"$HARMONY_ADMIN_PWD"'"}' \
   --insecure \
-  "https://harmony:8443/rest/security/authentication"
+  "https://localhost:8443/rest/security/authentication"
 
 XSRF_TOKEN=$(grep XSRF-TOKEN "$COOKIE_FILE" | awk '{ print $7; }')
 
@@ -42,7 +42,7 @@ curl -X GET \
   -H "X-XSRF-TOKEN: $XSRF_TOKEN" \
   -o "$USERS_QUERY_FILE" \
   --insecure \
-  "https://harmony:8443/rest/plugin/users?userName=pmode_admin"
+  "https://localhost:8443/rest/plugin/users?userName=pmode_admin"
 
 if grep -q pmode_admin "$USERS_QUERY_FILE"; then
   echo
@@ -60,11 +60,11 @@ else
     -H "X-XSRF-TOKEN: $XSRF_TOKEN" \
     -d '[{"status":"NEW","userName":"pmode_admin","active":true,"suspended":false,"authenticationType":"BASIC","authRoles":"ROLE_ADMIN","password":"'"$PMODE_ADMIN_PWD"'"}]' \
     --insecure \
-    "https://harmony:8443/rest/plugin/users"
+    "https://localhost:8443/rest/plugin/users"
 fi
 
 echo
 echo "#######################################################################################"
 echo "Upload pmode from $PMODE_PATH"
 echo "#######################################################################################"
-curl -u pmode_admin:"$PMODE_ADMIN_PWD" --basic -F file=@"$PMODE_PATH" --insecure "https://harmony:8443/ext/pmode?description=pmode"
+curl -u pmode_admin:"$PMODE_ADMIN_PWD" --basic -F file=@"$PMODE_PATH" --insecure "https://localhost:8443/ext/pmode?description=pmode"
