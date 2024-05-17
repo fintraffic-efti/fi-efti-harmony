@@ -3,6 +3,8 @@ name: Build and push Harmony image
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
 
 permissions:
   id-token: write
