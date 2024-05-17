@@ -43,7 +43,7 @@ jobs:
           name: harmony-image
           path: /tmp
 
-      - name: Tag and push image to Amazon ECR dev account
+      - name: Tag image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
@@ -52,7 +52,11 @@ jobs:
           docker tag harmony:latest $ECR_REGISTRY/harmony:$IMAGE_TAG
           docker tag harmony:latest $ECR_REGISTRY/harmony:deploy
           docker rmi harmony:latest
-          docker push --all-tags $ECR_REGISTRY/harmony
+
+      - name: Push image to Amazon ECR dev account
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker push --all-tags $ECR_REGISTRY/harmony
 
   push-poc-ecr:
     runs-on: ubuntu-latest
@@ -70,7 +74,7 @@ jobs:
           name: harmony-image
           path: /tmp
 
-      - name: Tag and push image to Amazon ECR dev account
+      - name: Tag image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
@@ -79,4 +83,8 @@ jobs:
           docker tag harmony:latest $ECR_REGISTRY/efti/harmony:$IMAGE_TAG
           docker tag harmony:latest $ECR_REGISTRY/efti/harmony:latest
           docker rmi harmony:latest
-          docker push --all-tags $ECR_REGISTRY/efti/harmony
+
+      - name: Push image to Amazon ECR poc account
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker push --all-tags $ECR_REGISTRY/efti/harmony
