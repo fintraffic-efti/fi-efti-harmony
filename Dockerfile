@@ -13,4 +13,8 @@ RUN chmod -R a+rX /opt/efti/bin \
 
 USER harmony-ap
 
+VOLUME /opt/harmony-ap/plugins/config
+VOLUME /var/opt/harmony-ap
+VOLUME /tmp
+
 ENTRYPOINT ["/opt/efti/bin/aggregate_entrypoint.sh"]
