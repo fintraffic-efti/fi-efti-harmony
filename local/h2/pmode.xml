@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:configuration xmlns:ns2="http://domibus.eu/configuration" party="h2">
+  <businessProcesses>
+    <roles>
+      <role name="defaultInitiatorRole"
+            value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator" />
+      <role name="defaultResponderRole"
+            value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder" />
+    </roles>
+    <parties>
+      <partyIdTypes>
+        <partyIdType name="partyTypeUrn" value="urn:oasis:names:tc:ebcore:partyid-type:unregistered" />
+        <partyIdType name="urn:oasis:names:tc:ebcore:partyid-type:EU-LU3" value="" />
+      </partyIdTypes>
+      <party name="h1" endpoint="https://harmony-h1:8443/services/msh">
+        <identifier partyId="party_id_h1" partyIdType="partyTypeUrn" />
+      </party>
+      <party name="h2" endpoint="https://harmony-h2:8443/services/msh">
+        <identifier partyId="party_id_h2" partyIdType="partyTypeUrn" />
+      </party>
+    </parties>
+    <meps>
+      <mep name="oneway" value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay" legs="0" />
+      <mep name="twoway" value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay" legs="0" />
+      <binding name="push" value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push" />
+      <binding name="pushAndPush" value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push-and-push" />
+    </meps>
+    <properties>
+      <property name="originalSenderProperty" key="originalSender" datatype="string" required="true" />
+      <property name="finalRecipientProperty" key="finalRecipient" datatype="string" required="true" />
+      <propertySet name="eDeliveryPropertySet">
+        <propertyRef property="finalRecipientProperty" />
+        <propertyRef property="originalSenderProperty" />
+      </propertySet>
+    </properties>
+    <payloadProfiles>
+      <payload name="businessContentPayload" cid="cid:message" mimeType="text/xml" maxSize="0" required="true"
+               inBody="false" />
+      <payload name="businessContentAttachment" cid="cid:attachment" mimeType="application/octet-stream" maxSize="0"
+               required="false" inBody="false" />
+      <payloadProfile name="MessageProfile" maxSize="40894464">
+        <attachment name="businessContentPayload" />
+        <attachment name="businessContentAttachment" />
+      </payloadProfile>
+    </payloadProfiles>
+    <securities>
+      <security name="eDeliveryAS4Policy" policy="eDeliveryAS4Policy.xml" signatureMethod="RSA_SHA256" />
+    </securities>
+    <errorHandlings>
+      <errorHandling name="errorHandling" errorAsResponse="true" businessErrorNotifyProducer="true"
+                     businessErrorNotifyConsumer="true" deliveryFailureNotifyProducer="true" />
+    </errorHandlings>
+    <agreements>
+      <agreement name="agreement1" value="A1" type="T1" />
+    </agreements>
+    <services>
+      <service name="pingService"
+               value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/service" />
+    </services>
+    <actions>
+      <action name="pingAction"
+              value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/test" />
+    </actions>
+    <as4>
+      <receptionAwareness name="receptionAwareness" retry="12;4;CONSTANT" duplicateDetection="true" />
+      <reliability name="AS4Reliability" replyPattern="response" nonRepudiation="true" />
+    </as4>
+    <legConfigurations>
+      <legConfiguration name="pingServiceCase"
+                        service="pingService"
+                        action="pingAction"
+                        defaultMpc="defaultMpc"
+                        reliability="AS4Reliability"
+                        security="eDeliveryAS4Policy"
+                        receptionAwareness="receptionAwareness"
+                        propertySet="eDeliveryPropertySet"
+                        payloadProfile="MessageProfile"
+                        errorHandling="errorHandling"
+                        compressPayloads="true" />
+    </legConfigurations>
+    <process name="tc1Process" initiatorRole="defaultInitiatorRole" responderRole="defaultResponderRole" mep="oneway"
+             binding="push">
+      <initiatorParties>
+        <initiatorParty name="h1" />
+        <initiatorParty name="h2" />
+      </initiatorParties>
+      <responderParties>
+        <responderParty name="h1" />
+        <responderParty name="h2" />
+      </responderParties>
+      <legs>
+        <leg name="pingServiceCase" />
+      </legs>
+    </process>
+  </businessProcesses>
+  <mpcs>
+    <mpc name="defaultMpc" retention_downloaded="0" retention_undownloaded="14400" retention_sent="-1"
+         retention_metadata_offset="0" delete_message_metadata="false" max_batch_delete="-1" default="true"
+         enabled="true" qualifiedName="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC" />
+  </mpcs>
+</ns2:configuration>

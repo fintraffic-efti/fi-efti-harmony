@@ -1,15 +1,13 @@
 services:
-  harmony:
+  harmony-h1:
     build:
       context: ./
       dockerfile: Dockerfile
     env_file:
-      # ./start.sh generates env files
-      - .pmode.env
-      - .stores.env
-      - .wsplugin.env
+      # ./start.sh generates env file
+      - local/h1/.env
     environment:
-      - DB_HOST=db
+      - DB_HOST=db-h1
       - DB_SCHEMA=harmony_ap
       - DB_PASSWORD=efti
       - ADMIN_PASSWORD=efti
@@ -18,19 +16,20 @@ services:
       # Password for pmode plugin
       - EFTI_PMODE_ADMIN_PASSWORD=efti_pmode
       - USE_DYNAMIC_DISCOVERY=false
-      - PARTY_NAME=party_a
-      - SECURITY_KEYSTORE_PASSWORD=efti1234
-      - SECURITY_TRUSTSTORE_PASSWORD=efti1234
-      - TLS_KEYSTORE_PASSWORD=efti1234
-      - TLS_TRUSTSTORE_PASSWORD=efti1234
+      - PARTY_NAME=h1
+      - SERVER_FQDN=harmony-h1
+      - SECURITY_KEYSTORE_PASSWORD=ap-keystore-h1
+      - SECURITY_TRUSTSTORE_PASSWORD=ap-truststore-h1
+      - TLS_KEYSTORE_PASSWORD=tls-keystore-h1
+      - TLS_TRUSTSTORE_PASSWORD=tls-truststore-h1
       - DOMIBUS_AUTH_UNSECURELOGINALLOWED=true
     restart: always
     ports:
       - "127.0.0.1:10443:8443"
     depends_on:
-      - db
+      - db-h1
 
-  db:
+  db-h1:
     image: mysql:8
     environment:
       - MYSQL_ROOT_PASSWORD=efti
@@ -43,4 +42,49 @@ services:
     restart: on-failure
     ports:
       - "127.0.0.1:13306:3306"
+    mem_limit: 512m
+    
+  harmony-h2:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      # ./start.sh generates env file
+      - local/h2/.env
+    environment:
+      - DB_HOST=db-h2
+      - DB_SCHEMA=harmony_ap
+      - DB_PASSWORD=efti
+      - ADMIN_PASSWORD=efti
+      # Simplify plugin password requirements for development setup
+      - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
+      # Password for pmode plugin
+      - EFTI_PMODE_ADMIN_PASSWORD=efti_pmode
+      - USE_DYNAMIC_DISCOVERY=false
+      - PARTY_NAME=h2
+      - SERVER_FQDN=harmony-h2
+      - SECURITY_KEYSTORE_PASSWORD=ap-keystore-h2
+      - SECURITY_TRUSTSTORE_PASSWORD=ap-truststore-h2
+      - TLS_KEYSTORE_PASSWORD=tls-keystore-h2
+      - TLS_TRUSTSTORE_PASSWORD=tls-truststore-h2
+      - DOMIBUS_AUTH_UNSECURELOGINALLOWED=true
+    restart: always
+    ports:
+      - "127.0.0.1:10444:8443"
+    depends_on:
+      - db-h2
+
+  db-h2:
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=efti
+      - MYSQL_DATABASE=harmony_ap
+      - MYSQL_USER=harmony_ap
+      - MYSQL_PASSWORD=efti
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_bin"
+    restart: on-failure
+    ports:
+      - "127.0.0.1:13307:3306"
     mem_limit: 512m

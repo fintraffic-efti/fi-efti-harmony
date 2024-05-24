@@ -1,5 +1,5 @@
 .idea
 *.iml
-.pmode.env
-.stores.env
-.wsplugin.env
+.env
+local/h1/stores
+local/h2/stores
