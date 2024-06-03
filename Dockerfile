@@ -1,4 +1,4 @@
-FROM niis/harmony-ap:2.2.0
+FROM niis/harmony-ap:2.4.0
 
 USER root
 RUN apt-get -qqy update \
@@ -7,13 +7,10 @@ RUN apt-get -qqy update \
  && apt-get clean
 
 COPY files/bin/* /opt/efti/bin/
-RUN chmod -R a+rX /opt/efti/bin \
-  && chmod 755 /opt/harmony-ap/plugins/config \
-  && chown harmony-ap:harmony-ap /opt/harmony-ap/plugins/config
+RUN chmod -R a+rX /opt/efti/bin
 
 USER harmony-ap
 
-VOLUME /opt/harmony-ap/plugins/config
 VOLUME /var/opt/harmony-ap
 VOLUME /tmp
 

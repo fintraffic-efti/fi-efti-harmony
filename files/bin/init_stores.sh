@@ -23,7 +23,7 @@ echo "$AP_TRUSTSTORE_PATH"
 echo "$TLS_KEYSTORE_PATH"
 echo "$TLS_TRUSTSTORE_PATH"
 
-mkdir -p /var/opt/harmony-ap/etc
+mkdir -p $STORE_ROOT_PATH
 echo "$AP_KEYSTORE_BASE64" | base64 --decode > "$AP_KEYSTORE_PATH"
 echo "$AP_TRUSTSTORE_BASE64" | base64 --decode > "$AP_TRUSTSTORE_PATH"
 echo "$TLS_KEYSTORE_BASE64" | base64 --decode > "$TLS_KEYSTORE_PATH"
