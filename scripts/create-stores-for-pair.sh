@@ -30,8 +30,7 @@ create_ap_ts() {
   local passphrase=$2
   local out_crt=$3
   local party_name_crt=$4
-  keytool -import -file "$out_crt/ap.crt" -keystore "$out_ts/ap-truststore.p12" -noprompt -storepass "$passphrase"
-  keytool -changealias -alias "mykey" -destalias $party_name_crt -keystore "$out_ts/ap-truststore.p12" -storepass "$passphrase"
+  keytool -import -alias $party_name_crt -file "$out_crt/ap.crt" -keystore "$out_ts/ap-truststore.p12" -noprompt -storepass "$passphrase"
 }
 
 create_tls_ks() {

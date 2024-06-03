@@ -15,10 +15,10 @@ echo
 
 set -x # Echo commands
 
-keytool --list -keystore ap-keystore.p12 -v -storepass ap-keystore-$instance_id
+keytool -list -keystore ap-keystore.p12 -v -storepass ap-keystore-$instance_id
 echo
-keytool --list -keystore ap-truststore.p12 -v -storepass ap-truststore-$instance_id
+keytool -list -keystore ap-truststore.p12 -v -storepass ap-truststore-$instance_id
 echo
-keytool --list -keystore tls-keystore.p12 -v -storepass tls-keystore-$instance_id
+keytool -list -keystore tls-keystore.p12 -v -storepass tls-keystore-$instance_id
 echo
-keytool --list -keystore tls-truststore.p12 -v -storepass tls-truststore-$instance_id
+keytool -list -keystore tls-truststore.p12 -v -storepass tls-truststore-$instance_id
