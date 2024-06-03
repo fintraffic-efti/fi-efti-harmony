@@ -31,6 +31,12 @@ Where:
 * `local` - Root dir for instances
 * `h1` - Instance name under that root dir
 
+### Building the image for local testing
+Build the image with the following command:
+```shell
+./build.sh 
+```
+
 ## Development
 
 Launch example setup of two harmony instances with:
