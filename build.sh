@@ -1,0 +1,1 @@
+docker build --tag efti/harmony:latest .
