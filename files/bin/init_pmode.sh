@@ -11,11 +11,11 @@ PMODE_BASE64=$3
 PMODE_PATH=$(mktemp --suffix=.xml)
 COOKIE_FILE=$(mktemp)
 
-if [ -z $EFTI_HARMONY_PORT ]; then
+if [ -n $EFTI_HARMONY_PORT ]; then
   EFTI_HARMONY_PORT=8443
 fi
 
-if [ -z $EXTERNAL_LB ]; then
+if [ -n $EXTERNAL_LB ]; then
     EXTERNAL_LB='false'
 fi
 
