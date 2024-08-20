@@ -83,8 +83,6 @@ services:
       - ACTIVEMQ_BROKER_NAME=broker1,broker2
       - ACTIVEMQ_USERNAME=admin
       - ACTIVEMQ_PASSWORD=admin
-      # Need EXTERNAL_LB in addition to DEPLOYMENT_CLUSTERED because of our init scripts
-      - EXTERNAL_LB=true
     restart: always
     depends_on:
       - db-h2
@@ -122,8 +120,6 @@ services:
       - ACTIVEMQ_BROKER_NAME=broker1,broker2
       - ACTIVEMQ_USERNAME=admin
       - ACTIVEMQ_PASSWORD=admin
-      # Need EXTERNAL_LB in addition to DEPLOYMENT_CLUSTERED because of our init scripts
-      - EXTERNAL_LB=true
     restart: always
     depends_on:
       - db-h2

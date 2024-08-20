@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 
-set -e
+set -e # Exit immediately if a command exits with a non-zero status.
+set -u # Treat unset variables as an error when substituting.
+
 cmd="$@"
 
 >&2 echo 'Waiting for Harmony to start before proceeding'
 
 EXTERNAL_LB=${EXTERNAL_LB:-false}
+DEPLOYMENT_CLUSTERED=${DEPLOYMENT_CLUSTERED:-false}
 
-if [ "$EXTERNAL_LB" = "true" ]; then
-    >&2 echo 'Using http for pmode configuration'
+if [ "$EXTERNAL_LB" = "true" ] || [ "$DEPLOYMENT_CLUSTERED" = "true" ]; then
+    >&2 echo "Expecting harmony to listen on http port (EXTERNAL_LB=$EXTERNAL_LB, DEPLOYMENT_CLUSTERED=$DEPLOYMENT_CLUSTERED)"
     PROTOCOL='http'
     PORT=8080
 else
-    >&2 echo 'Using https for pmode configuration'
+    >&2 echo "Expecting harmony to listen on https port (EXTERNAL_LB=$EXTERNAL_LB, DEPLOYMENT_CLUSTERED=$DEPLOYMENT_CLUSTERED)"
     PROTOCOL='https'
     PORT=8443
 fi
