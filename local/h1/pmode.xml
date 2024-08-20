@@ -15,7 +15,7 @@
       <party name="h1" endpoint="https://harmony-h1:8443/services/msh">
         <identifier partyId="party_id_h1" partyIdType="partyTypeUrn" />
       </party>
-      <party name="h2" endpoint="https://harmony-h2:8443/services/msh">
+      <party name="h2" endpoint="http://harmony-h2:8080/services/msh">
         <identifier partyId="party_id_h2" partyIdType="partyTypeUrn" />
       </party>
     </parties>

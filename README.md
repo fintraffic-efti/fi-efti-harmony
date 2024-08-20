@@ -39,15 +39,19 @@ Build the image with the following command:
 
 ## Development
 
-Launch example setup of two harmony instances with:
+In [compose.yml](compose.yml) there is a local development setup:
 
+* Harmony 1 (h1) - Regular harmony instance, not behind a load balancer
+* Harmony 2 (h2) - Cluster of two harmony instances, behind a load balancer (nginx)
+
+Launch the setup with:
 ```shell
 ./start.sh
 ```
 
 Harmony uis are available at:
 * h1: https://localhost:10443
-* h2: https://localhost:10444
+* h2: http://localhost:10444 (NOTE: http)
 
 Login with:
 * user: harmony
@@ -63,4 +67,4 @@ Verify keystore/truststore uploads from:
 
 Verify connection between the two instances by clicking "Send" for either:
 * Sender h1, receiver h2: https://localhost:10443/connections
-* Sender h2, receiver h1: https://localhost:10444/connections
+* Sender h2, receiver h1: http://localhost:10444/connections
