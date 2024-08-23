@@ -12,13 +12,14 @@ PMODE_PATH=$(mktemp --suffix=.xml)
 COOKIE_FILE=$(mktemp)
 
 EXTERNAL_LB=${EXTERNAL_LB:-false}
+DEPLOYMENT_CLUSTERED=${DEPLOYMENT_CLUSTERED:-false}
 
-if [ "$EXTERNAL_LB" = "true" ]; then
-    echo 'Using http for pmode configuration'
+if [ "$EXTERNAL_LB" = "true" ] || [ "$DEPLOYMENT_CLUSTERED" = "true" ]; then
+    echo "Using http for pmode configuration (EXTERNAL_LB=$EXTERNAL_LB, DEPLOYMENT_CLUSTERED=$DEPLOYMENT_CLUSTERED)"
     PROTOCOL='http'
     PORT=8080
 else
-    echo 'Using https for pmode configuration'
+    echo "Using https for pmode configuration (EXTERNAL_LB=$EXTERNAL_LB, DEPLOYMENT_CLUSTERED=$DEPLOYMENT_CLUSTERED)"
     PROTOCOL='https'
     PORT=8443
 fi
