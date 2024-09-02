@@ -2,6 +2,7 @@ FROM niis/harmony-ap:2.4.0
 
 USER root
 RUN apt-get -qqy update \
+ && apt-get -qqy upgrade \
  && apt-get -qqy install curl \
  && apt-get autoremove \
  && apt-get clean
