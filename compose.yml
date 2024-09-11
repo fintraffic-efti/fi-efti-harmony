@@ -79,7 +79,8 @@ services:
       - TLS_TRUSTSTORE_PASSWORD=tls-truststore-h2
       - DOMIBUS_AUTH_UNSECURELOGINALLOWED=true
       - DEPLOYMENT_CLUSTERED=true
-      - ACTIVEMQ_BROKER_HOST=harmony-jms-broker1,harmony-jms-broker2
+      - ACTIVEMQ_BROKER_URI=tcp://harmony-jms-broker1:61616,tcp://harmony-jms-broker2:61616
+      - ACTIVEMQ_JMX_URI=service:jmx:rmi:///jndi/rmi://harmony-jms-broker1:1199/jmxrmi,service:jmx:rmi:///jndi/rmi://harmony-jms-broker2:1199/jmxrmi
       - ACTIVEMQ_BROKER_NAME=broker1,broker2
       - ACTIVEMQ_USERNAME=admin
       - ACTIVEMQ_PASSWORD=admin
@@ -116,7 +117,8 @@ services:
       - TLS_TRUSTSTORE_PASSWORD=tls-truststore-h2
       - DOMIBUS_AUTH_UNSECURELOGINALLOWED=true
       - DEPLOYMENT_CLUSTERED=true
-      - ACTIVEMQ_BROKER_HOST=harmony-jms-broker1,harmony-jms-broker2
+      - ACTIVEMQ_BROKER_URI=tcp://harmony-jms-broker1:61616,tcp://harmony-jms-broker2:61616
+      - ACTIVEMQ_JMX_URI=service:jmx:rmi:///jndi/rmi://harmony-jms-broker1:1199/jmxrmi,service:jmx:rmi:///jndi/rmi://harmony-jms-broker2:1199/jmxrmi
       - ACTIVEMQ_BROKER_NAME=broker1,broker2
       - ACTIVEMQ_USERNAME=admin
       - ACTIVEMQ_PASSWORD=admin
@@ -152,11 +154,9 @@ services:
       - ACTIVEMQ_JMX_PASSWORD=admin
       - ACTIVEMQ_WEB_USER=webadmin
       - ACTIVEMQ_WEB_PASSWORD=admin
-      - ACTIVEMQ_DATA=/var/opt/apache-activemq
-      - ACTIVEMQ_TMP=/var/tmp
     mem_limit: 1000m
     volumes:
-      - ./local/h2/activemq-broker1.xml:/opt/apache-activemq/conf/activemq-broker1.xml
+      - ./local/h2/activemq-broker1.xml:/opt/apache-activemq/conf/activemq.xml
       - harmony-jms-data:/var/opt/apache-activemq
 
   harmony-jms-broker2:
@@ -168,11 +168,9 @@ services:
       - ACTIVEMQ_JMX_PASSWORD=admin
       - ACTIVEMQ_WEB_USER=webadmin
       - ACTIVEMQ_WEB_PASSWORD=admin
-      - ACTIVEMQ_DATA=/var/opt/apache-activemq
-      - ACTIVEMQ_TMP=/var/tmp
     mem_limit: 1000m
     volumes:
-      - ./local/h2/activemq-broker2.xml:/opt/apache-activemq/conf/activemq-broker1.xml
+      - ./local/h2/activemq-broker2.xml:/opt/apache-activemq/conf/activemq.xml
       - harmony-jms-data:/var/opt/apache-activemq
 
 volumes:
