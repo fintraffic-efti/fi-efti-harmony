@@ -362,8 +362,11 @@ changeLogFile:db.changelog.xml") \
   if [[ $DEPLOYMENT_CLUSTERED = "true" ]]; then
     log "Enabling clustered deployment"
 
-    set_prop_tmp "activeMQ.transportConnector.uri"   "failover:($ACTIVEMQ_BROKER_URI)?randomize=false"
-    set_prop_tmp "activeMQ.JMXURL"                   "$ACTIVEMQ_JMX_URI"
+    set_prop_tmp "activeMQ.transportConnector.uri"     "failover:($ACTIVEMQ_BROKER_URI)?randomize=false"
+
+    if [ -n "${ACTIVEMQ_JMX_URI:-}" ]; then
+      set_prop_tmp "activeMQ.JMXURL"                   "${ACTIVEMQ_JMX_URI}"
+    fi
 
     set_prop_tmp "domibus.deployment.clustered"        "true"
     set_prop_tmp "activeMQ.brokerName"                 "${ACTIVEMQ_BROKER_NAME:-localhost}"
