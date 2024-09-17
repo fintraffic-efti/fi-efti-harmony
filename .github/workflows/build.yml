@@ -23,7 +23,7 @@ jobs:
       - uses: docker/build-push-action@v5
         with:
           context: .
-          tags: harmony:$IMAGE_TAG
+          tags: harmony:latest
           outputs: type=docker,dest=/tmp/harmony-image.tar
 
       - uses: actions/upload-artifact@v4
@@ -53,9 +53,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           docker load --input /tmp/harmony-image.tar
-          docker tag harmony:$IMAGE_TAG $ECR_REGISTRY/harmony:$IMAGE_TAG
-          docker tag harmony:$IMAGE_TAG $ECR_REGISTRY/harmony:deploy
-          docker rmi harmony:$IMAGE_TAG
+          docker tag harmony:latest $ECR_REGISTRY/harmony:$IMAGE_TAG
+          docker tag harmony:latest $ECR_REGISTRY/harmony:deploy
+          docker rmi harmony:latest
 
       - name: Push image to Amazon ECR dev account
         env:
@@ -87,9 +87,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           docker load --input /tmp/harmony-image.tar
-          docker tag harmony:$IMAGE_TAG $ECR_REGISTRY/efti/harmony:$IMAGE_TAG
-          docker tag harmony:$IMAGE_TAG $ECR_REGISTRY/efti/harmony:latest
-          docker rmi harmony:$IMAGE_TAG
+          docker tag harmony:latest $ECR_REGISTRY/efti/harmony:$IMAGE_TAG
+          docker tag harmony:latest $ECR_REGISTRY/efti/harmony:latest
+          docker rmi harmony:latest
 
       - name: Push image to Amazon ECR poc account
         env:
