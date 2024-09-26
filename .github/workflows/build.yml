@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-image
     timeout-minutes: 3
+    environment: dev
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/aws-ecr-login
@@ -54,17 +55,38 @@ jobs:
         run: |
           docker load --input /tmp/harmony-image.tar
           docker tag harmony:latest $ECR_REGISTRY/harmony:$IMAGE_TAG
-          docker tag harmony:latest $ECR_REGISTRY/harmony:deploy
           docker rmi harmony:latest
+
+      - name: Update deploy tag to AWS
+        run: aws secretsmanager update-secret --secret-id ${{ secrets.AWS_DEPLOY_SECRET_ARN }} --secret-string $IMAGE_TAG
 
       - name: Push image to Amazon ECR dev account
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: docker push --all-tags $ECR_REGISTRY/harmony
 
-      - name: Update Amazon ECS with new image
-        continue-on-error: true
-        run: aws ecs update-service --cluster core --service harmony --force-new-deployment
+      - name: Update ECS task definition with the new image
+        id: update-task-definition
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          TASK_DEFINITION=$(aws ecs describe-task-definition --include TAGS --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }})
+          echo "REVISION=$(echo "$TASK_DEFINITION" | jq '.taskDefinition.revision')" >> "$GITHUB_OUTPUT"
+          NEW_TASK_DEFINITION=$(echo "$TASK_DEFINITION" | jq --arg IMAGE "$ECR_REGISTRY/harmony:$IMAGE_TAG" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+          TAGS=$(echo "$TASK_DEFINITION" | jq '.tags')
+          NEW_TASK_INFO=$(aws ecs register-task-definition --tags "$TAGS" --cli-input-json "$NEW_TASK_DEFINITION")
+          echo "NEW_REVISION=$(echo "$NEW_TASK_INFO" | jq '.taskDefinition.revision')" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to AWS
+        env:
+          TASK_DEFINITION_REVISION: ${{ steps.update-task-definition.outputs.NEW_REVISION }}
+        run: aws ecs update-service --cluster core --service harmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
+
+      - name: Deregister old Task Definition
+        env:
+          TASK_DEFINITION_REVISION: ${{ steps.update-task-definition.outputs.REVISION }}
+        run: aws ecs deregister-task-definition --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
+
 
   push-poc-ecr:
     runs-on: ubuntu-latest
