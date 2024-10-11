@@ -83,6 +83,7 @@ jobs:
         run: aws ecs update-service --cluster core --service harmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
 
       - name: Deregister old Task Definition
+        if: false
         env:
           TASK_DEFINITION_REVISION: ${{ steps.update-task-definition.outputs.REVISION }}
         run: aws ecs deregister-task-definition --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
