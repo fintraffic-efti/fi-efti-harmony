@@ -5,4 +5,4 @@ set -e
 ./local/config.sh 'h1'
 ./local/config.sh 'h2'
 
-docker compose up -d
+docker compose up -d --build
