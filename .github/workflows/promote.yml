@@ -1,0 +1,64 @@
+name: Promote and deploy Harmony to AWS environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Deploy environment
+        type: choice
+        default: tst
+        options:
+          - tst
+        required: true
+      image_tag:
+        description: Harmony image tag
+        type: string
+        required: true
+
+jobs:
+  promote-and-deploy:
+    permissions:
+      contents: read
+      id-token: write # OIDC token requires write permission
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    timeout-minutes: 10
+
+    steps:
+      - uses: ./.github/actions/aws-ecr-login
+        id: pull-ecr
+        with:
+          role: ${{ secrets.AWS_HARMONY_ECR_READ_ROLE_ARN }}
+
+      - id: pull-image-name-tag
+        run: echo "NAME_TAG=${{ steps.pull-ecr.outputs.registry }}/harmony:${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+
+      - name: Pull Harmony image
+        run: docker pull ${{ steps.pull-image-name-tag.outputs.NAME_TAG }}
+
+      - uses: ./.github/actions/aws-ecr-login
+        id: deploy-ecr
+        with:
+          role: ${{ secrets.AWS_HARMONY_DEPLOY_ROLE_ARN }}
+
+      - id: deploy-image-name-tag
+        run: echo "NAME_TAG=${{ steps.deploy-ecr.outputs.registry }}/harmony:${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+
+      - name: Update Harmony deploy tag to AWS
+        run: aws secretsmanager update-secret --secret-id ${{ secrets.AWS_HARMONY_DEPLOY_SECRET_ARN }} --secret-string ${{ inputs.image_tag }}
+
+      - name: Tag and push Harmony image to Amazon ECR
+        run: |
+          docker tag ${{ steps.pull-image-name-tag.outputs.NAME_TAG }} ${{ steps.deploy-image-name-tag.outputs.NAME_TAG }}
+          docker push ${{ steps.deploy-image-name-tag.outputs.NAME_TAG }}
+
+      - name: Update ECS task definition
+        id: update-task-definition
+        run: |
+          TASK_DEFINITION=$(aws ecs describe-task-definition --include TAGS --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }})
+          TAGS=$(echo "$TASK_DEFINITION" | jq '.tags')
+          NEW_TASK_DEFINITION=$(echo "$TASK_DEFINITION" | jq --arg IMAGE "${{ steps.deploy-image-name-tag.outputs.NAME_TAG }}" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+          echo "NEW_REVISION=$(aws ecs register-task-definition --tags "$TAGS" --cli-input-json "$NEW_TASK_DEFINITION" | jq '.taskDefinition.revision')" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to AWS
+        run: aws ecs update-service --cluster core --service harmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:${{ steps.update-task-definition.outputs.NEW_REVISION }}
