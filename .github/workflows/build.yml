@@ -1,4 +1,4 @@
-name: Build and push Harmony image
+name: Build and deploy Harmony to Dev environment
 
 on:
   workflow_dispatch:
@@ -6,15 +6,13 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write
-  contents: read
-
 env:
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
   build-image:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -32,7 +30,10 @@ jobs:
           path: /tmp/harmony-image.tar
           if-no-files-found: error
 
-  push-dev-ecr:
+  deploy-dev:
+    permissions:
+      id-token: write
+      contents: read
     runs-on: ubuntu-latest
     needs: build-image
     timeout-minutes: 3
@@ -42,14 +43,14 @@ jobs:
       - uses: ./.github/actions/aws-ecr-login
         id: login-ecr
         with:
-          role: ${{ secrets.AWS_DEV_DEPLOYMENT_ROLE }}
+          role: ${{ secrets.AWS_HARMONY_DEPLOY_ROLE_ARN }}
 
       - uses: actions/download-artifact@v4
         with:
           name: harmony-image
           path: /tmp
 
-      - name: Tag image
+      - name: Tag Harmony image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
@@ -58,9 +59,9 @@ jobs:
           docker rmi harmony:latest
 
       - name: Update deploy tag to AWS
-        run: aws secretsmanager update-secret --secret-id ${{ secrets.AWS_DEPLOY_SECRET_ARN }} --secret-string $IMAGE_TAG
+        run: aws secretsmanager update-secret --secret-id ${{ secrets.AWS_HARMONY_DEPLOY_SECRET_ARN }} --secret-string $IMAGE_TAG
 
-      - name: Push image to Amazon ECR dev account
+      - name: Push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: docker push --all-tags $ECR_REGISTRY/harmony
@@ -71,7 +72,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           TASK_DEFINITION=$(aws ecs describe-task-definition --include TAGS --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }})
-          echo "REVISION=$(echo "$TASK_DEFINITION" | jq '.taskDefinition.revision')" >> "$GITHUB_OUTPUT"
           NEW_TASK_DEFINITION=$(echo "$TASK_DEFINITION" | jq --arg IMAGE "$ECR_REGISTRY/harmony:$IMAGE_TAG" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
           TAGS=$(echo "$TASK_DEFINITION" | jq '.tags')
           NEW_TASK_INFO=$(aws ecs register-task-definition --tags "$TAGS" --cli-input-json "$NEW_TASK_DEFINITION")
@@ -81,40 +81,3 @@ jobs:
         env:
           TASK_DEFINITION_REVISION: ${{ steps.update-task-definition.outputs.NEW_REVISION }}
         run: aws ecs update-service --cluster core --service harmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
-
-      - name: Deregister old Task Definition
-        if: false
-        env:
-          TASK_DEFINITION_REVISION: ${{ steps.update-task-definition.outputs.REVISION }}
-        run: aws ecs deregister-task-definition --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
-
-
-  push-poc-ecr:
-    runs-on: ubuntu-latest
-    needs: build-image
-    timeout-minutes: 3
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/aws-ecr-login
-        id: login-ecr
-        with:
-          role: ${{ secrets.AWS_POC_DEPLOYMENT_ROLE }}
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: harmony-image
-          path: /tmp
-
-      - name: Tag image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          docker load --input /tmp/harmony-image.tar
-          docker tag harmony:latest $ECR_REGISTRY/efti/harmony:$IMAGE_TAG
-          docker tag harmony:latest $ECR_REGISTRY/efti/harmony:latest
-          docker rmi harmony:latest
-
-      - name: Push image to Amazon ECR poc account
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: docker push --all-tags $ECR_REGISTRY/efti/harmony
