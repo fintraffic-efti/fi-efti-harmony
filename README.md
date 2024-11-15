@@ -2,7 +2,17 @@
 
 This image enhances
 [Harmony docker image](https://github.com/nordic-institute/harmony-common/blob/main/packaging/ap/docker/Dockerfile)
-with automatic pmode and keystore/truststore upload. See [compose.yml](compose.yml) for usage example.
+with:
+
+* Automatic upload of pmode.xml and keystore/truststore files
+* Passing pmode.xml and keystore/trustore contents via environment variables as base64 encoded binaries
+
+See [compose.yml](compose.yml) for usage example.
+
+To start a development setup via docker compose, just run the start script (see [Development](#development) for details):
+```shell
+./start.sh
+````
 
 ## Utilities
 
