@@ -78,3 +78,9 @@ Verify keystore/truststore uploads from:
 Verify connection between the two instances by clicking "Send" for either:
 * Sender h1, receiver h2: https://localhost:10443/connections
 * Sender h2, receiver h1: http://localhost:10444/connections
+
+## Known limitations
+
+* After changing EXTRENAL_LB from true to false on an existing container and restarting the container, harmony
+  does not start/respond (message "Harmony is unavailable - sleeping" can be seen repeated in logs)
+* Changes to stores do not necessarily be taken into use after container restart
