@@ -38,6 +38,7 @@ echo "##########################################################################
 echo "Login to harmony as admin user"
 echo "#######################################################################################"
 curl -X POST \
+  --fail-with-body \
   --cookie-jar "$COOKIE_FILE" \
   -H 'Content-Type: application/json' \
   -d '{"username" : "'"$ADMIN_USER"'", "password" : "'"$HARMONY_ADMIN_PWD"'"}' \
@@ -52,6 +53,7 @@ echo "Check if pmode plugin user has already been setup"
 echo "#######################################################################################"
 USERS_QUERY_FILE=$(mktemp)
 curl -X GET \
+  --fail-with-body \
   -b "$COOKIE_FILE" \
   -H "X-XSRF-TOKEN: $XSRF_TOKEN" \
   -o "$USERS_QUERY_FILE" \
@@ -69,6 +71,7 @@ else
   echo "Create pmode plugin user"
   echo "#######################################################################################"
   curl -X PUT \
+    --fail-with-body \
     -b "$COOKIE_FILE" \
     -H 'Content-Type: application/json' \
     -H "X-XSRF-TOKEN: $XSRF_TOKEN" \
@@ -81,4 +84,10 @@ echo
 echo "#######################################################################################"
 echo "Upload pmode from $PMODE_PATH"
 echo "#######################################################################################"
-curl -u pmode_admin:"$PMODE_ADMIN_PWD" --basic -F file=@"$PMODE_PATH" --insecure "$PROTOCOL://localhost:$PORT/ext/pmode?description=pmode"
+curl \
+  --fail-with-body \
+  -u pmode_admin:"$PMODE_ADMIN_PWD" \
+  --basic \
+  -F file=@"$PMODE_PATH" \
+  --insecure \
+  "$PROTOCOL://localhost:$PORT/ext/pmode?description=pmode"

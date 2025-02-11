@@ -23,7 +23,7 @@ services:
       - TLS_KEYSTORE_PASSWORD=tls-keystore-h1
       - TLS_TRUSTSTORE_PASSWORD=tls-truststore-h1
       - DOMIBUS_AUTH_UNSECURELOGINALLOWED=true
-    restart: always
+    restart: no
     ports:
       - "127.0.0.1:10443:8443"
     depends_on:
@@ -84,7 +84,7 @@ services:
       - ACTIVEMQ_BROKER_NAME=broker1,broker2
       - ACTIVEMQ_USERNAME=admin
       - ACTIVEMQ_PASSWORD=admin
-    restart: always
+    restart: no
     depends_on:
       - db-h2
       - harmony-jms-broker1
@@ -122,7 +122,7 @@ services:
       - ACTIVEMQ_BROKER_NAME=broker1,broker2
       - ACTIVEMQ_USERNAME=admin
       - ACTIVEMQ_PASSWORD=admin
-    restart: always
+    restart: no
     depends_on:
       - db-h2
       - harmony-jms-broker1
