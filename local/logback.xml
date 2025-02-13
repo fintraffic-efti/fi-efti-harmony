@@ -21,7 +21,13 @@
         </encoder>
     </appender>
 
-    <logger name="eu.domibus" level="INFO"/>
+    <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <logger name="eu.domibus" level="INFO">
+        <appender-ref ref="json"/>
+    </logger>
 
     <logger name="eu.domibus.statistic" level="INFO" additivity="false">
         <appender-ref ref="statistic"/>
@@ -31,7 +37,7 @@
     <logger name="org.apache.cxf" level="WARN"/>
 
     <root level="WARN">
-        <appender-ref ref="stdout"/>
+        <appender-ref ref="json"/>
     </root>
 
 </configuration>
