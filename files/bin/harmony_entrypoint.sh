@@ -362,22 +362,12 @@ changeLogFile:db.changelog.xml") \
   if [[ $DEPLOYMENT_CLUSTERED = "true" ]]; then
     log "Enabling clustered deployment"
 
-    if [[ $ACTIVEMQ_BROKER_HOST == *,* ]]; then
-      log "Multiple ActiveMQ brokers found, overriding configuration properties"
-
-      TRANSPORT_PORT="${ACTIVEMQ_TRANSPORT_PORT:-61616}"
-      JMX_PORT="${ACTIVEMQ_JMX_PORT:-1199}"
-
-      set_prop_tmp "activeMQ.transportConnector.uri"   "failover:($(add_prefix_suffix "$ACTIVEMQ_BROKER_HOST" "tcp://" ":$TRANSPORT_PORT"))?randomize=false"
-      set_prop_tmp "activeMQ.JMXURL"                   "$(add_prefix_suffix "$ACTIVEMQ_BROKER_HOST" "service:jmx:rmi:///jndi/rmi://" ":$JMX_PORT/jmxrmi")"
-    else
-      log "Single ActiveMQ broker found, using default properties"
-    fi
+    set_prop_tmp "activeMQ.transportConnector.uri"   "failover:($ACTIVEMQ_BROKER_URI)?randomize=false"
+    set_prop_tmp "activeMQ.JMXURL"                   "$ACTIVEMQ_JMX_URI"
 
     set_prop_tmp "domibus.deployment.clustered"        "true"
     set_prop_tmp "activeMQ.brokerName"                 "${ACTIVEMQ_BROKER_NAME:-localhost}"
     set_prop_tmp "activeMQ.embedded.configurationFile" ""
-    set_prop_tmp "activeMQ.broker.host"                "${ACTIVEMQ_BROKER_HOST}"
     set_prop_tmp "activeMQ.username"                   "${ACTIVEMQ_USERNAME}"
     set_prop_tmp "activeMQ.password"                   "${ACTIVEMQ_PASSWORD}"
   fi
