@@ -32,7 +32,8 @@ if [[ $1 == "help" ]]; then
   MAX_MEM                          512m
   PRESERVE_BACKUP_FILE_DATE        false if config is on SMB filesystem, otherwise true
 
-  # The following params can not be set once written to config:
+  # The following params can not be set once written to config.
+  # They are used for initial setup, they won't be updated on subsequent runs:
   PARTY_NAME                       selfsigned
   SERVER_FQDN                      *output of 'hostname -f'*
   SERVER_DN                        CN=*SERVER_FQDN*
@@ -48,11 +49,12 @@ if [[ $1 == "help" ]]; then
 
   # clustering setup
   DEPLOYMENT_CLUSTERED             false
-  ACTIVEMQ_BROKER_URI              *required*
+  ACTIVEMQ_BROKER_HOST             *required if clustered*
   ACTIVEMQ_BROKER_NAME             localhost
-  ACTIVEMQ_JMX_URI                 *required*
   ACTIVEMQ_USERNAME                *required*
   ACTIVEMQ_PASSWORD                *required*
+  ACTIVEMQ_TRANSPORT_PORT          61616
+  ACTIVEMQ_JMX_PORT                1199
 
   # if true, offload TLS termination to an external LB. AP will use port 8080
   EXTERNAL_LB                      false
@@ -360,14 +362,11 @@ changeLogFile:db.changelog.xml") \
   if [[ $DEPLOYMENT_CLUSTERED = "true" ]]; then
     log "Enabling clustered deployment"
 
-    # Changes made by eFTI to support SSL endpoints in AWS
-    # START
     set_prop_tmp "activeMQ.transportConnector.uri"     "failover:($ACTIVEMQ_BROKER_URI)?randomize=false"
 
     if [ -n "${ACTIVEMQ_JMX_URI:-}" ]; then
       set_prop_tmp "activeMQ.JMXURL"                   "${ACTIVEMQ_JMX_URI}"
     fi
-    # END
 
     set_prop_tmp "domibus.deployment.clustered"        "true"
     set_prop_tmp "activeMQ.brokerName"                 "${ACTIVEMQ_BROKER_NAME:-localhost}"
