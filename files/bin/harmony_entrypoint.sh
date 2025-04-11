@@ -362,7 +362,8 @@ changeLogFile:db.changelog.xml") \
 
     # Changes made by eFTI to support SSL endpoints in AWS
     # START
-    set_prop_tmp "activeMQ.transportConnector.uri"     "failover:($ACTIVEMQ_BROKER_URI)?randomize=false"
+    set_prop_tmp "activeMQ.transportConnector.uri"     "failover:($ACTIVEMQ_BROKER_URI)?randomize=false&jms.prefetchPolicy.all=${JMS_PREFETCH_POLICY_ALL:-1000}"
+
 
     if [ -n "${ACTIVEMQ_JMX_URI:-}" ]; then
       set_prop_tmp "activeMQ.JMXURL"                   "${ACTIVEMQ_JMX_URI}"
