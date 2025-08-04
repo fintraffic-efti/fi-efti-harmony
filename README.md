@@ -32,7 +32,7 @@ This image supports passing specific configuration files via environment variabl
 
 ### Creating keystores and truststores for a pair of harmony instances
 ```shell
-scripts/create-stores-for-pair.sh h1/stores h1 harmony-h1 h2/stores h2 harmony-h2
+scripts/create-stores-for-pair.sh local/h1/stores h1 harmony-h1 local/h2/stores h2 harmony-h2
 ```
 
 Where:
