@@ -1,4 +1,4 @@
-FROM niis/harmony-ap:2.5.0@sha256:ccc55bfd5af8440254e0d26cc5a453fad648fd7e12738e58d63e2bcec5733d3e
+FROM niis/harmony-ap:2.6.0@sha256:5bef76f6a2840fdfdb4988fbe1891c02b3805786c5640c46d7e2677646cbb1f8
 USER root
 RUN apt-get -qqy update \
  && apt-get -qqy upgrade \
