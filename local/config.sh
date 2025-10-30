@@ -19,7 +19,7 @@ base64Path() {
 }
 
 rm -f "$env_file"
-echo "EFTI_PMODE_BASE64=""$(base64Path $instance/pmode.xml)""" >> "$env_file"
+echo "PMODE_CONFIG_B64=""$(base64Path $instance/pmode.xml)""" >> "$env_file"
 echo "EFTI_AP_KEYSTORE_BASE64=""$(base64Path $instance/stores/ap-keystore.p12)""" >> "$env_file"
 echo "EFTI_AP_TRUSTSTORE_BASE64=""$(base64Path $instance/stores/ap-truststore.p12)""" >> "$env_file"
 echo "EFTI_TLS_KEYSTORE_BASE64=""$(base64Path $instance/stores/tls-keystore.p12)""" >> "$env_file"
