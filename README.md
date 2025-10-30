@@ -20,10 +20,6 @@ To start a development setup via docker compose, just run the start script (see 
 
 This image supports passing specific configuration files via environment variables as base64 encoded strings.
 
-* EFTI_AP_KEYSTORE_BASE64 - AP keystore
-* EFTI_AP_TRUSTSTORE_BASE64 - AP truststore
-* EFTI_TLS_KEYSTORE_BASE64 - TLS keystore
-* EFTI_TLS_TRUSTSTORE_BASE64 - TLS truststore
 * EFTI_WSPLUGIN_PROPERTIES_BASE64 - wsplugin.properties
 * EFTI_LOGBACK_XML_BASE64 - (optional) logback.xml
 

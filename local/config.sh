@@ -20,10 +20,10 @@ base64Path() {
 
 rm -f "$env_file"
 echo "PMODE_CONFIG_B64=""$(base64Path $instance/pmode.xml)""" >> "$env_file"
-echo "EFTI_AP_KEYSTORE_BASE64=""$(base64Path $instance/stores/ap-keystore.p12)""" >> "$env_file"
-echo "EFTI_AP_TRUSTSTORE_BASE64=""$(base64Path $instance/stores/ap-truststore.p12)""" >> "$env_file"
-echo "EFTI_TLS_KEYSTORE_BASE64=""$(base64Path $instance/stores/tls-keystore.p12)""" >> "$env_file"
-echo "EFTI_TLS_TRUSTSTORE_BASE64=""$(base64Path $instance/stores/tls-truststore.p12)""" >> "$env_file"
+echo "SECURITY_KEYSTORE_B64=""$(base64Path $instance/stores/ap-keystore.p12)""" >> "$env_file"
+echo "SECURITY_TRUSTSTORE_B64=""$(base64Path $instance/stores/ap-truststore.p12)""" >> "$env_file"
+echo "TLS_KEYSTORE_B64=""$(base64Path $instance/stores/tls-keystore.p12)""" >> "$env_file"
+echo "TLS_TRUSTSTORE_B64=""$(base64Path $instance/stores/tls-truststore.p12)""" >> "$env_file"
 echo "EFTI_WSPLUGIN_PROPERTIES_BASE64=""$(base64Path $instance/wsplugin.properties)""" >> "$env_file"
 
 # Use custom logback.xml only for the other instance so that we may test optionality of the variable.
