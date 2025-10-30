@@ -15,7 +15,7 @@ fi
 PMODE_INIT_PID=$!
 
 # Start harmony in background so that we may easily check wait_for_harmony.sh status
-/opt/efti/bin/harmony_entrypoint.sh &
+exec /usr/bin/harmony-entrypoint "$@" &
 HARMONY_PID=$!
 
 # Note: this will wait for wait_for_harmony.sh to finish (error or timeout) even if harmony_entrypoint.sh
