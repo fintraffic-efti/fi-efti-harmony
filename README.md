@@ -20,6 +20,8 @@ To start a development setup via docker compose, just run the start script (see 
 
 This image supports passing specific configuration files via environment variables as base64 encoded strings.
 
+* ACTIVEMQ_JMX_URI (optional) - list of JMX URI for ActiveMQ, separated by comma
+* ACTIVEMQ_BROKER_URI (optional) - list of broker URI for ActiveMQ, separated by comma
 * EFTI_WSPLUGIN_PROPERTIES_BASE64 - wsplugin.properties
 
 ## Utilities

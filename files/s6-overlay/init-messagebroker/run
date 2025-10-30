@@ -40,7 +40,11 @@ construct_jmx_url() {
   local hosts="$1"
   local port="$2"
 
-  add_prefix_suffix "${hosts}" "service:jmx:rmi:///jndi/rmi://" ":${port}/jmxrmi"
+  if [ -z "ACTIVEMQ_JMX_URI" ]; then
+    echo "${ACTIVEMQ_JMX_URI}"
+  else
+    add_prefix_suffix "${hosts}" "service:jmx:rmi:///jndi/rmi://" ":${port}/jmxrmi"
+  fi
 }
 
 decode_from_base64() {
@@ -76,7 +80,12 @@ configure_external_broker() {
   set_property "activeMQ.password" "${pass}"
 
   local hosts
-  hosts="$(add_prefix_suffix "${broker_host}" "tcp://" ":${ACTIVEMQ_TRANSPORT_PORT}")"
+
+  if [ -z "$ACTIVEMQ_BROKER_URI" ]; then
+    hosts="${ACTIVEMQ_BROKER_URI}"
+  else
+    hosts="$(add_prefix_suffix "${broker_host}" "tcp://" ":${ACTIVEMQ_TRANSPORT_PORT}")"
+  fi
 
   echo "failover:(${hosts})?randomize=false"
 }
