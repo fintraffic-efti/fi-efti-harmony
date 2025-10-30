@@ -9,6 +9,8 @@ RUN apt-get -qqy update \
 COPY files/bin/* /opt/efti/bin/
 RUN chmod -R a+rX /opt/efti/bin
 
+COPY files/s6-overlay/ /etc/s6-overlay/s6-rc.d/
+
 COPY files/lib/* /opt/harmony-ap/webapps/ROOT/WEB-INF/lib/
 
 USER harmony-ap
