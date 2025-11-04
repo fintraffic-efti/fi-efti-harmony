@@ -13,8 +13,6 @@ services:
       - ADMIN_PASSWORD=efti
       # Simplify plugin password requirements for development setup
       - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
-      # Password for pmode plugin
-      - EFTI_PMODE_ADMIN_PASSWORD=efti_pmode
       - USE_DYNAMIC_DISCOVERY=false
       - PARTY_NAME=h1
       - SERVER_FQDN=harmony-h1
@@ -68,8 +66,6 @@ services:
       - ADMIN_PASSWORD=efti
       # Simplify plugin password requirements for development setup
       - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
-      # Password for pmode plugin
-      - EFTI_PMODE_ADMIN_PASSWORD=efti_pmode
       - USE_DYNAMIC_DISCOVERY=false
       - PARTY_NAME=h2
       - SERVER_FQDN=harmony-h2
@@ -106,8 +102,6 @@ services:
       - ADMIN_PASSWORD=efti
       # Simplify plugin password requirements for development setup
       - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
-      # Password for pmode plugin
-      - EFTI_PMODE_ADMIN_PASSWORD=efti_pmode
       - USE_DYNAMIC_DISCOVERY=false
       - PARTY_NAME=h2
       - SERVER_FQDN=harmony-h2
