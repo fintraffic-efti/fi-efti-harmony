@@ -62,4 +62,4 @@ jobs:
           echo "NEW_REVISION=$(aws ecs register-task-definition --tags "$TAGS" --cli-input-json "$NEW_TASK_DEFINITION" | jq '.taskDefinition.revision')" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to AWS
-        run: aws ecs update-service --cluster core --service harmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:${{ steps.update-task-definition.outputs.NEW_REVISION }}
+        run: aws ecs update-service --cluster core --service GateEdeliveryHarmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:${{ steps.update-task-definition.outputs.NEW_REVISION }}
