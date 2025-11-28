@@ -81,4 +81,4 @@ jobs:
       - name: Deploy to AWS
         env:
           TASK_DEFINITION_REVISION: ${{ steps.update-task-definition.outputs.NEW_REVISION }}
-        run: aws ecs update-service --cluster core --service harmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
+        run: aws ecs update-service --cluster core --service GateEdeliveryHarmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
