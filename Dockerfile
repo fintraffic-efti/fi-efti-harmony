@@ -17,5 +17,6 @@ USER harmony-ap
 
 VOLUME /var/opt/harmony-ap
 VOLUME /tmp
+VOLUME /run
 
 ENTRYPOINT ["/opt/efti/bin/aggregate_entrypoint.sh"]
