@@ -24,7 +24,7 @@ jobs:
           tags: harmony:latest
           outputs: type=docker,dest=/tmp/harmony-image.tar
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: harmony-image
           path: /tmp/harmony-image.tar
