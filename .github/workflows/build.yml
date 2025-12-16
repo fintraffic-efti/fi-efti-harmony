@@ -79,6 +79,4 @@ jobs:
           echo "NEW_REVISION=$(echo "$NEW_TASK_INFO" | jq '.taskDefinition.revision')" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to AWS
-        env:
-          TASK_DEFINITION_REVISION: ${{ steps.update-task-definition.outputs.NEW_REVISION }}
-        run: aws ecs update-service --cluster core --service GateEdeliveryHarmony --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:$TASK_DEFINITION_REVISION
+        run: aws ecs update-service --cluster ${{ secrets.AWS_HARMONY_CLUSTER_NAME }} --service ${{ secrets.AWS_HARMONY_SERVICE_NAME }} --task-definition ${{ secrets.AWS_HARMONY_TASK_DEFINITION_ARN }}:${{ steps.update-task-definition.outputs.NEW_REVISION }} > /dev/null
