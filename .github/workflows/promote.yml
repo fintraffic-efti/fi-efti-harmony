@@ -38,7 +38,7 @@ jobs:
           role: ${{ secrets.AWS_HARMONY_ECR_READ_ROLE_ARN }}
 
       - id: pull-image-name-tag
-        name: Harmony image name
+        name: Pull Harmony image name
         run: |
           echo "NAME_TAG=${{ steps.pull-ecr.outputs.registry }}/harmony:${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
 
@@ -52,7 +52,7 @@ jobs:
           role: ${{ secrets.AWS_HARMONY_DEPLOY_ROLE_ARN }}
 
       - id: deploy-image-name-tag
-        name: Harmony image name
+        name: Deploy Harmony image name
         run: |
           echo "NAME_TAG=${{ steps.deploy-ecr.outputs.registry }}/harmony:${{ env.IMAGE_TAG }}" >> "$GITHUB_OUTPUT"
 
