@@ -40,7 +40,7 @@ construct_jmx_url() {
   local hosts="$1"
   local port="$2"
 
-  if [ -z "ACTIVEMQ_JMX_URI" ]; then
+  if [ -n "${ACTIVEMQ_JMX_URI:-}" ]; then
     echo "${ACTIVEMQ_JMX_URI}"
   else
     add_prefix_suffix "${hosts}" "service:jmx:rmi:///jndi/rmi://" ":${port}/jmxrmi"
@@ -81,7 +81,7 @@ configure_external_broker() {
 
   local hosts
 
-  if [ -z "$ACTIVEMQ_BROKER_URI" ]; then
+  if [ -n "${ACTIVEMQ_BROKER_URI:-}" ]; then
     hosts="${ACTIVEMQ_BROKER_URI}"
   else
     hosts="$(add_prefix_suffix "${broker_host}" "tcp://" ":${ACTIVEMQ_TRANSPORT_PORT}")"

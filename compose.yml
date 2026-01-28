@@ -64,6 +64,7 @@ services:
       - DB_SCHEMA=harmony_ap
       - DB_PASSWORD=efti
       - ADMIN_PASSWORD=efti
+      - CLUSTER_SECRET_KEY=secret-key-h2
       # Simplify plugin password requirements for development setup
       - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
       - USE_DYNAMIC_DISCOVERY=false
@@ -100,6 +101,7 @@ services:
       - DB_SCHEMA=harmony_ap
       - DB_PASSWORD=efti
       - ADMIN_PASSWORD=efti
+      - CLUSTER_SECRET_KEY=secret-key-h2
       # Simplify plugin password requirements for development setup
       - DOMIBUS_PLUGIN_PASSWORDPOLICY_PATTERN=^.+$
       - USE_DYNAMIC_DISCOVERY=false
