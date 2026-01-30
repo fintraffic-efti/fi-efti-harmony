@@ -46,7 +46,7 @@ jobs:
         with:
           role: ${{ secrets.AWS_HARMONY_DEPLOY_ROLE_ARN }}
 
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: harmony-image
           path: /tmp
